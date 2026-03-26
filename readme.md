@@ -7,7 +7,7 @@ A customized Claude [status line](https://code.claude.com/docs/en/statusline).
 1. Fork & clone this repo
 1. Tweak `statusline-command.sh`
 1. Open your Claude settings (`~\.claude\settings.json`)
-1. Set `statusLine.command` to absolute path of `statusline-command.sh`
+1. Set `statusLine.command` to absolute path of this repo's `statusline-command.sh`
 
 ## Why?
 
