@@ -1,28 +1,31 @@
 #!/usr/bin/env bash
 
-# Gauge colors: bright (full segment), dark-gray (half segment), very light (empty)
-_GAUGE_BLUE=$'\033[94m'
-_GAUGE_GREEN=$'\033[92m'
-_GAUGE_MID_BLUE=$'\033[34m'
-_GAUGE_MID_GREEN=$'\033[32m'
-_GAUGE_LIGHT_BLUE=$'\033[38;5;153m'
-_GAUGE_LIGHT_GREEN=$'\033[38;5;157m'
+# Gauge colors: fg (full), bg (empty)
+_GAUGE_FG_BLUE=$'\033[94m'
+_GAUGE_BG_BLUE=$'\033[44m'
+_GAUGE_FG_GREEN=$'\033[92m'
+_GAUGE_BG_GREEN=$'\033[42m'
 _GAUGE_WHITE=$'\033[97m'
 _GAUGE_RESET=$'\033[0m'
 
 make_gauge() {
-  local pct=$1 color=$2 mid=$3 light=$4
+  local pct=$1 fg=$2 bg=$3
   [ $pct -gt 100 ] && pct=100
   [ $pct -lt 0  ] && pct=0
 
+  local chars="▁▂▃▄▅▆▇█"
   local out=""
   for ((i=0; i<10; i++)); do
     local seg=$(( pct - i * 10 ))
     [ $seg -gt 10 ] && seg=10
     [ $seg -lt 0  ] && seg=0
-    if   [ $seg -ge 10 ]; then out+="${color}█"
-    elif [ $seg -ge 5  ]; then out+="${mid}█"
-    else                       out+="${light}█"
+    local seg100=$(( seg * 10 ))
+    if [ $seg100 -eq 0 ]; then
+      out+="${bg} "
+    else
+      local idx=$(( seg100 * 8 / 100 ))
+      [ $idx -gt 7 ] && idx=7
+      out+="${bg}${fg}${chars:$idx:1}"
     fi
   done
   out+="${_GAUGE_RESET} ${_GAUGE_WHITE}${pct}%${_GAUGE_RESET}"
@@ -93,13 +96,13 @@ fi
 
 # Rate limit strings
 if [ -n "$pct_5h" ] && [ "$pct_5h" != "null" ]; then
-  rate_5h_str="🕰️ $(make_gauge "$pct_5h" "$_GAUGE_BLUE" "$_GAUGE_MID_BLUE" "$_GAUGE_LIGHT_BLUE")${reset_5h_str}"
+  rate_5h_str="🕰️ $(make_gauge "$pct_5h" "$_GAUGE_FG_BLUE" "$_GAUGE_BG_BLUE")${reset_5h_str}"
 else
   rate_5h_str=""
 fi
 
 if [ -n "$pct_7d" ] && [ "$pct_7d" != "null" ]; then
-  rate_7d_str="📆 $(make_gauge "$pct_7d" "$_GAUGE_GREEN" "$_GAUGE_MID_GREEN" "$_GAUGE_LIGHT_GREEN")${reset_7d_str}"
+  rate_7d_str="📆 $(make_gauge "$pct_7d" "$_GAUGE_FG_GREEN" "$_GAUGE_BG_GREEN")${reset_7d_str}"
 else
   rate_7d_str=""
 fi
