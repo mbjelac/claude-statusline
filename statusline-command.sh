@@ -5,6 +5,8 @@ _GAUGE_FG_BLUE=$'\033[94m'
 _GAUGE_BG_BLUE=$'\033[44m'
 _GAUGE_FG_GREEN=$'\033[92m'
 _GAUGE_BG_GREEN=$'\033[42m'
+_GAUGE_FG_PINK=$'\033[38;5;161m'
+_GAUGE_BG_PINK=$'\033[48;5;218m'
 _GAUGE_WHITE=$'\033[97m'
 _GAUGE_RESET=$'\033[0m'
 
@@ -87,9 +89,9 @@ else
   reset_7d_str=""
 fi
 
-# Model + context percentage
+# Model + context gauge
 if [ -n "$used" ]; then
-  context_str="${model}  🧠  ${used}%"
+  context_str="${model}  🧠  $(make_gauge "$used" "$_GAUGE_FG_PINK" "$_GAUGE_BG_PINK")"
 else
   context_str="${model}  🧠  --%"
 fi
