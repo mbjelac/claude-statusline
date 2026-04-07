@@ -13,7 +13,7 @@ make_gauge() {
   [ $pct -gt 100 ] && pct=100
   [ $pct -lt 0  ] && pct=0
 
-  local chars="▁▂▃▄▅▆▇█"
+  local chars="▏▎▍▌▋▊▉█"
   local out=""
   for ((i=0; i<10; i++)); do
     local seg=$(( pct - i * 10 ))
